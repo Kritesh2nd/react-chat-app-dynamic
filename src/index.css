@@ -144,6 +144,7 @@
 .inrr {border: 1px solid #f00;height: 100%;width: 100%;position: relative;}
 .flex {display: flex;}
 .flexmid {display: flex;justify-content: center;align-items: center;}
+.fdrr{flex-direction: row-reverse;}
 .fcol {display: flex;flex-direction: column;}
 .flexcol {display: flex;flex-direction: column;}
 .flexcen {display: flex;justify-content: center;}

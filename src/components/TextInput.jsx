@@ -15,7 +15,6 @@ const TextInput = (props) => {
           value={props.value} 
           placeholder={`enter your ${props.name}...`}
           {...props}
-
           />
       </div>
       { props.errMessage !== '' && <div className='fs15 colx3 pt5 txt6'>{props.errMessage}</div>}
