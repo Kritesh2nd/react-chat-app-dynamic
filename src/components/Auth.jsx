@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import React from 'react'
 import TextInput from './TextInput'
 import Button from './Button'
 import Message from './Message'
+
+import {searchByUsername,searchByEmail} from "../service/user-management.service"
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -12,6 +15,8 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [userList, setUserList] = useState([]);
 
   const handleInputChange = (event) => {
     console.log("helo")
@@ -26,19 +31,21 @@ const Auth = () => {
     }
   }
   const doLogin = (e) => {
-    let isLogin = false;
-    if(email === "admin" && password === "admin") {
-      isLogin = true;
-    }
+    // setUserList
+    console.log(searchByEmail("kritesh@gmail.com"))
+    // let isLogin = false;
+    // if(email === "admin" && password === "admin") {
+    //   isLogin = true;
+    // }
 
-    if(isLogin) {
-      // showSuccessMessage('Login successful');
-      localStorage.setItem('isLogin', '1');
-      // navigate('/user-management');
-      navigate('/');
-    } else {
-      setErrorMessage('Invalid email or password');
-    }
+    // if(isLogin) {
+    //   // showSuccessMessage('Login successful');
+    //   localStorage.setItem('isLogin', '1');
+    //   // navigate('/user-management');
+    //   navigate('/');
+    // } else {
+    //   setErrorMessage('Invalid email or password');
+    // }
   }
 
   const doRegister = (e) => {
@@ -58,12 +65,12 @@ const Auth = () => {
   }
 
   useEffect(() => {
-    // const isLogin = localStorage.getItem('isLogin');
-    const isLogin = 0;
-    console.log("isLogin")
-    if(isLogin === '1') {
-      // navigate('/user-management');
+    const isLogin = localStorage.getItem('isLogin');
+    if(isLogin == '1') {
       navigate('/');
+    }
+    else{
+      navigate('/signin');
     }
   }, []);
 
@@ -85,6 +92,7 @@ const Auth = () => {
         title="Uusername" 
         type="text"
         name="username" 
+        key="username"
         handleInputChange={handleInputChange}
         value={username} />
       }
@@ -92,12 +100,14 @@ const Auth = () => {
         title="Email" 
         type="text"
         name="email" 
+        key="email"
         handleInputChange={handleInputChange}
         value={email} />
       <TextInput 
         title="Password" 
         type="password"
         name="password" 
+        key="password"
         handleInputChange={handleInputChange}
         value={password} />
         <div className='flex pt20 pl20'>

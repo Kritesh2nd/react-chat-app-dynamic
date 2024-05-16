@@ -8,6 +8,7 @@ import iconSetting1 from "../icons/setting1.png"
 import iconMessage2 from "../icons/message2.png"
 import iconPerson2 from "../icons/person2.png"
 import iconSetting2 from "../icons/setting2.png"
+import { useNavigate } from 'react-router-dom'
 
 const LeftSideButton = ({data, handelSideButton}) => {
   const { id, name, active, icon1, icon2 } = data;
@@ -23,10 +24,12 @@ const LeftSideButton = ({data, handelSideButton}) => {
 }
 
 const Sidebar = () => {
+
+  const navigate = useNavigate();
   const [leftSideBtn, setLeftSideBtn] = useState([
-    {id:1, icon1:iconMessage1, icon2:iconMessage2, name:'message', active: true},
-    {id:2, icon1:iconPerson1, icon2:iconPerson2, name:'person', active: false},
-    {id:3, icon1:iconSetting1, icon2:iconSetting2, name:'setting', active: false},
+    {id:1, icon1:iconMessage1, icon2:iconMessage2, name:'message', active: true, link:"message"},
+    {id:2, icon1:iconPerson1, icon2:iconPerson2, name:'person', active: false, link:"profile"},
+    {id:3, icon1:iconSetting1, icon2:iconSetting2, name:'setting', active: false, link:"setting"},
   ])
 
   const handelSideButton = (data) => {
@@ -37,16 +40,19 @@ const Sidebar = () => {
     if(data.name == 'message'){
       console.log("message");
       tempLeftSideBtn[0].active = true;
+      navigate(leftSideBtn[0].link);
     }
 
     if(data.name == 'person'){
       console.log("person");
       tempLeftSideBtn[1].active = true;
+      navigate(leftSideBtn[1].link);
     }
 
     if(data.name == 'setting'){
       console.log("setting");
       tempLeftSideBtn[2].active = true;
+      navigate(leftSideBtn[2].link);
     }
     setLeftSideBtn(tempLeftSideBtn)
   }

@@ -13,6 +13,14 @@ import smileEmoji from "../icons/smileEmoji.png"
 import sendMessage from "../icons/sendMessage.png"
 
 import avatar from '../images/avatar1.png'
+import avatar1 from '../images/avatar1.png'
+import avatar2 from '../images/avatar2.png'
+import avatar3 from '../images/avatar3.png'
+import avatar4 from '../images/avatar4.png'
+import avatar5 from '../images/avatar5.png'
+import avatar6 from '../images/avatar6.png'
+import avatar7 from '../images/avatar7.png'
+import avatar8 from '../images/avatar8.png'
 
 
 const InputMsg = ({value,handelMessage}) => {
@@ -73,41 +81,70 @@ const ChatHeader = () => {
   )
 }
 
-const Message = () => {
+const Message = ({selfId,data}) => {
+  const {uid, profile, fullname, message, time } = data;
   // const selfMsg = true;
-  const selfMsg = false;
+  const selfMsg = selfId == uid;
   return (
-    <div className={`${selfMsg?'fdrr':''} flex mb-4 bor`}>
+    <div className='flexcol bor'>
+      <div className={`${selfMsg?'none':''} pl-16 fs12 txt4 flex aic bor`}>
+        {fullname}
+      </div>
+      <div className={`${selfMsg?'fdrr':''} flex mb-4 bor`}>
       <div className='flexcol bor'>
         <div className='flex bor br50 bgcol1 ovh' data-name="profile head">
-          <img src={avatar} className='h-12 w-12'/>
+          <img src={profile} className='h-12 w-12'/>
         </div>
-      </div>
+      </div>  
       <div className={`${selfMsg?'bgcol4':'bgsecondary'} flex p-3 br10 aic mx-4 colx1`} data-name="message" style={{width:'50%',maxWidth:'55%'}}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nesciunt illum maxime a quisquam! Beatae!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nesciunt illum maxime a quisquam! Beatae!
+        {message}
       </div>
       <div className='fs12 txt4 flex aic bor'>
-        7:28 AM
-      </div>
+        {time}
+      </div>           
+    </div>
     </div>
   )
 }
 const DisplayMessage = () => {
   const scrollRef = useRef(null);
 
+  const selfId = "1";
+
+
+  const [msgList, setMsgList] = useState([]);
+  const allMsg = [
+    { uid:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
+    { uid:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
+    { uid:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
+    { uid:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
+    { uid:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
+    { uid:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
+    { uid:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
+    { uid:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
+    
+  ]
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    
+    setMsgList(allMsg);
+    setTimeout(()=>{
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    },10)
+    
+
   }, []);
   return (
     <div className='bor h-full ova'>
       <div className='px-5 pt-10 h100 ova'  ref={scrollRef}>
-        <Message/>
-        <Message/>
-        <Message/>
-        <Message/>
+        {
+          msgList.map(data => (
+            <Message selfId={selfId} data={data}/>
+          ))
+        }
+        
+
       </div>
     </div>
   )
@@ -115,7 +152,7 @@ const DisplayMessage = () => {
 const SetIcon = ({icon}) => {
   return (
     <div className='flex aic px-3 bor'>
-      <img src={icon} className='w-6 bor cup' onClick={''}/>
+      <img src={icon} className='w-6 bor cup'/>
     </div>
   )
 }
