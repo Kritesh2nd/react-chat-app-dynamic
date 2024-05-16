@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import avatar from '../images/avatar1.png'
 
 import iconMessage1 from "../icons/message1.png"
@@ -22,23 +22,31 @@ const LeftSideButton = ({data, handelSideButton}) => {
   )
 }
 
-const User = () => {
-
-  const [lastMessage, setLastMessage] = "Hey man what's up Hey man what's up Hey man what's up";
+const SideUser = ({data}) => {
+  const {profile, fullname} = data;
+  const [lastMessage, setLastMessage] = useState("Hey man what's up Hey man what's up Hey man what's up");
 
   const handelLastMessage = () => {
-    
+    const data = lastMessage;
+    const CHAR_LIMIT = 25;
+    if(data.length > CHAR_LIMIT){
+      let newText = data.substring(0, CHAR_LIMIT) + "...";
+      setLastMessage(newText);
+    }
   }
 
+  useEffect(()=>{
+    handelLastMessage();
+  },[])
   return(
-    <div className='flex px-4 py-4 outx3'>
+    <div className='flex px-4 py-4 out'>
       <div className='' data-name="profile">
         <div className='bgcol4 br50 ovh bor'>
-          <img className='h-12 w-12 bor ' src={avatar}/>
+          <img className='h-12 w-12 bor ' src={profile}/>
         </div>
       </div>
-      <div className='flexcol px-3 fg1 borx' data-name="name">
-        <div className='fs16 colw'>Kritesh Thapa</div>
+      <div className='flexcol px-3 fg1 bor' data-name="name">
+        <div className='fs16 colw'>{fullname}</div>
         <div className='fs13 txt4 ovh'>
           {lastMessage}
         </div>
@@ -60,11 +68,15 @@ const Sidebar = () => {
   ])
 
   const [userList, setUserList] = useState([
-    {id:1, fullname:'Kritesh Thapa', emai:'kritesh@gmail.com',password:'password'},
-    {id:1, fullname:'Swastika Thapa', emai:'kritesh@gmail.com',password:'password'},
-    {id:1, fullname:'Kiran Chettri', emai:'kritesh@gmail.com',password:'password'},
-    {id:1, fullname:'Siddhartha Shrestha', emai:'kritesh@gmail.com',password:'password'},
-    {id:1, fullname:'Dillip Shrestha', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Kritesh Thapa', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Swastika Thapa', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Kiran Chettri', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Siddhartha Shrestha', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Dillip Shrestha', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Dillip Shrestha', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Dillip Shrestha', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Dillip Shrestha', emai:'kritesh@gmail.com',password:'password'},
+    {id:1,profile:avatar, fullname:'Dillip Shrestha', emai:'kritesh@gmail.com',password:'password'},
   ])
   const handelSideButton = (data) => {
     let tempLeftSideBtn = [...leftSideBtn];
@@ -105,11 +117,17 @@ const Sidebar = () => {
           
           <span className='abs w-full h-[2px] bgcol1 ' style={{left:0,bottom:0}}></span>
         </div>
-        <div className='flexcol'>
+        <div className='flexcol ovs'>
           <div className='fs16 txt4 px-5 py-4'>
             Recent
           </div>
-          <User/>
+          {
+            userList.map(data => (
+              <SideUser data={data}/>
+            ))
+          }
+          
+          {/* <SideUser/> */}
         </div>
       </div>
     </div>
