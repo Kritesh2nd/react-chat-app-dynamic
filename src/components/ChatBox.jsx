@@ -22,6 +22,8 @@ import avatar6 from '../images/avatar6.png'
 import avatar7 from '../images/avatar7.png'
 import avatar8 from '../images/avatar8.png'
 
+import { getAllUsers,getGroupMessagesByName, addUser, searchByEmail } from "../service/user-management.service"
+
 
 const InputMsg = ({value,handelMessage}) => {
   return (
@@ -81,19 +83,20 @@ const ChatHeader = () => {
   )
 }
 
-const Message = ({selfId,data}) => {
-  const {uid, profile, fullname, message, time } = data;
+const Message = ({selfId,msgData}) => {
+  const {id, uid, message, time } = msgData;
   // const selfMsg = true;
-  const selfMsg = selfId == uid;
+  const selfMsg = selfId == id;
   return (
     <div className='flexcol bor'>
       <div className={`${selfMsg?'none':''} pl-16 fs12 txt4 flex aic bor`}>
-        {fullname}
+        {/* {fullname} */}
+        scasc selfId:{selfId} id:{id}
       </div>
       <div className={`${selfMsg?'fdrr':''} flex mb-4 bor`}>
       <div className='flexcol bor'>
         <div className='flex bor br50 bgcol1 ovh' data-name="profile head">
-          <img src={profile} className='h-12 w-12'/>
+          <img src={avatar} className='h-12 w-12'/>
         </div>
       </div>  
       <div className={`${selfMsg?'bgcol4':'bgsecondary'} flex p-3 br10 aic mx-4 colx1`} data-name="message" style={{width:'50%',maxWidth:'55%'}}>
@@ -109,24 +112,35 @@ const Message = ({selfId,data}) => {
 const DisplayMessage = () => {
   const scrollRef = useRef(null);
 
-  const selfId = "1";
+  const selfId = "0";
 
 
   const [msgList, setMsgList] = useState([]);
   const allMsg = [
-    { uid:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
-    { uid:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
-    { uid:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
-    { uid:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
-    { uid:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
-    { uid:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
-    { uid:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
-    { uid:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
+    { id:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
+    { id:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
+    { id:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
+    { id:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
+    { id:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
+    { id:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
+    { id:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
+    { id:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
     
   ]
   useEffect(() => {
     
-    setMsgList(allMsg);
+    getGroupMessagesByName('201').then((res) => {
+      console.log("getting all data",res[0].messages)
+ 
+// {id: '01', uid: '01', message: 'Lorem ipsum dolor sit amet consectetur adipisicing…um in cupiditate nam tempora, consequuntur magni!', time: '7:00 PM'} 
+// {id: '02', uid: '02', message: 'Lorem ipsum dolor sit amet consectetur adipisicing…t cum officia, aliquam eum cumque necessitatibus.', time: '7:01 PM'} 
+// {id: '03', uid: '01', message: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time: '7:02 PM'}
+// {id: '04', uid: '02', message: 'Quae quia earum suscipit cum officia, aliquam eum cumque necessitatibus.', time: '7:03 PM'}
+      setMsgList(res[0].messages);
+    }).catch((err) => {
+      console.log("no group message found")
+    });
+    
     setTimeout(()=>{
       if (scrollRef.current) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -140,7 +154,7 @@ const DisplayMessage = () => {
       <div className='px-5 pt-10 h100 ova'  ref={scrollRef}>
         {
           msgList.map(data => (
-            <Message selfId={selfId} data={data}/>
+            <Message key={data} selfId={selfId} msgData={data}/>
           ))
         }
         

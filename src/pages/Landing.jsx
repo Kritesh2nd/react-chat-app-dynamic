@@ -2,7 +2,7 @@ import React from 'react'
 
 import Auth from "../components/Auth"
 
-const Landing = () => {
+const Landing = ({currUser,setCurrUser}) => {
   return (
     <div className='p-24 px-36 hw-100 bgcol1'>
       <div className='flex hw100'>
@@ -14,7 +14,7 @@ const Landing = () => {
           </div>
         </div>
         <div className='w50'>
-          <Auth/>
+          <Auth currUser={currUser} setCurrUser={setCurrUser}/>
         </div>
       </div>
     </div>

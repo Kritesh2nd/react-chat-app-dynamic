@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 import React from 'react'
 import TextInput from './TextInput'
 import Button from './Button'
 import Message from './Message'
 
-import {searchByUsername,searchByEmail} from "../service/user-management.service"
+import { addUser, searchByEmail } from "../service/user-management.service"
 
 const Auth = () => {
   const navigate = useNavigate();
   const [authTypeSignIn, setAuthTypeSignIn] = useState(true);
-  const [username, setUsername] = useState('');
+  const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -26,41 +27,64 @@ const Auth = () => {
     if(event.target.name == 'password') {
       setPassword(event.target.value);
     }
-    if(event.target.name == 'username') {
-      setUsername(event.target.value);
+    if(event.target.name == 'fullname') {
+      setFullname(event.target.value);
     }
   }
-  const doLogin = (e) => {
-    // setUserList
-    console.log(searchByEmail("kritesh@gmail.com"))
-    // let isLogin = false;
-    // if(email === "admin" && password === "admin") {
-    //   isLogin = true;
-    // }
+  
+  const doLogin = () => {
+    console.log("doLogin")
+    searchByEmail(email).then((res)=>{
+      const userData = res[0];
+      const rightEmailAndPas = userData.password == password;
 
-    // if(isLogin) {
-    //   // showSuccessMessage('Login successful');
-    //   localStorage.setItem('isLogin', '1');
-    //   // navigate('/user-management');
-    //   navigate('/');
-    // } else {
-    //   setErrorMessage('Invalid email or password');
-    // }
+      if(rightEmailAndPas){
+        localStorage.setItem('isLogin', '1');
+        localStorage.setItem('currUser', JSON.stringify(res[0]));
+        // var user = JSON.parse(localStorage.getItem('currUser'));
+        // console.log(localStorage.getItem('currUser'))
+        // console.log("User data: ",JSON.parse(localStorage.getItem('currUser')))
+        console.log("login passed")
+        navigate('/');
+      }
+    })
+    .catch((err)=>{
+      console.log("nooo err: "+err)
+      setErrorMessage('Invalid email or password');
+      setPassword('');
+      navigate('/signin');
+    })
   }
 
-  const doRegister = (e) => {
-    let isResiter = false;
-    if(email !="" && password != "" && username != "") {
-      isResiter = true;
+  const doRegister = () => {
+    
+    if(fullname!="" && email!="" && password!=""){
+      searchByEmail(email).then((res)=>{
+        if(res.length == 0){
+          console.log("no account")
+          console.log("adding user")
+          const newUser = {
+            "id": uuidv4(),
+            "fullname":fullname,
+            "username": fullname,
+            "email": email,
+            "password": password
+          }
+          addUser(newUser);
+          localStorage.setItem('isLogin', '1');
+          localStorage.setItem('currUser', JSON.stringify(newUser));
+          navigate('/');
+          console.log("register passed")
+        }else{
+          setErrorMessage('Account is already created from this account');
+        }
+      })
+      .catch((err)=>{
+        console.log("Add User Error: "+err)
+      })
     }
-
-    if(isResiter) {
-      // showSuccessMessage('Login successful');
-      localStorage.setItem('isLogin', '1');
-      // navigate('/user-management');
-      navigate('/');
-    } else {
-      setErrorMessage('Please enter valid data');
+    else{
+      setErrorMessage('Pleas fill all the input boxes');
     }
   }
 
@@ -72,11 +96,12 @@ const Auth = () => {
     else{
       navigate('/signin');
     }
-  }, []);
+  }, [authTypeSignIn]);
 
   const handelSignInUp = value => {
     console.log('authTypeSignIn: '+authTypeSignIn);
     setAuthTypeSignIn(value)
+    setErrorMessage('')
   }
   return (
     <div className='flexcol hw100 p20 ptn30 br10 bgcol2'>
@@ -89,12 +114,12 @@ const Auth = () => {
       
       {
         !authTypeSignIn && <TextInput 
-        title="Uusername" 
+        title="Full name" 
         type="text"
-        name="username" 
-        key="username"
+        name="fullname" 
+        key="fullname"
         handleInputChange={handleInputChange}
-        value={username} />
+        value={fullname} />
       }
       <TextInput 
         title="Email" 
@@ -111,11 +136,12 @@ const Auth = () => {
         handleInputChange={handleInputChange}
         value={password} />
         <div className='flex pt20 pl20'>
-          <Button click={doLogin} title={authTypeSignIn?'Sign In':'Sign Up'}/>
+          <Button click={authTypeSignIn?doLogin:doRegister} title={authTypeSignIn?'Sign In':'Sign Up'}/>
         </div>
         
         <div className='fs15 pt5 txt6 pl20'>
           {errorMessage && authTypeSignIn && <Message message={errorMessage}/>}
+          {errorMessage && !authTypeSignIn && <Message message={errorMessage}/>}
         </div>
       </div>
     </div>

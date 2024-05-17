@@ -1,6 +1,18 @@
 import axios from "axios";
 
 const BASE_URL = 'http://localhost:4000/users';
+const BASE_URL_MESSAGE = 'http://localhost:4000/groupMessage';
+
+export const getGroupMessagesByName = (name) => {
+  return new Promise((resolve, reject) => {
+    axios.get(`${BASE_URL_MESSAGE}?name=${name}`)
+        .then((res) => {
+          resolve(res.data);
+        }).catch((err) => {
+          reject(err);
+        })
+  });
+}
 
 export const getAllUsers = () => {
   return new Promise((resolve, reject) => {
@@ -49,9 +61,20 @@ export const getUserById = (userId) => {
     return new Promise((resolve, reject) => {
       axios.get(`${BASE_URL}?email=${email}`)
           .then((res) => {
+
             resolve(res.data);
           }).catch((err) => {
-            
+            reject(err);
+          })
+    });
+  }
+
+  export const searchByPassword = (password) => {
+    return new Promise((resolve, reject) => {
+      axios.get(`${BASE_URL}?password=${password}`)
+          .then((res) => {
+            resolve(res.data);
+          }).catch((err) => {
             reject(err);
           })
     });
