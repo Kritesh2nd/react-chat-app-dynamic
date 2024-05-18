@@ -70,7 +70,7 @@ const ChatHeader = () => {
       
       <div className='flexcol bor pl-5' data-name="profile name box">
         <div className='fs18 font-medium'>
-          Kritesh Thapa
+          201
         </div>
         <div className='flex aic fs12'>
           Online
@@ -124,7 +124,12 @@ const DisplayMessage = ({selfId,pressKey}) => {
 
   const [msgList, setMsgList] = useState([]);
   const [newMsgList, setNewMsgList] = useState([]);
-
+  const [latestMsg, setLatestMsg] = useState([]);
+  const [counter, setCounter] = useState(0);
+  setInterval(()=>{
+    setCounter(counter+1);
+  },[4000])
+  
   
   useEffect(()=>{
 
@@ -187,6 +192,15 @@ const DisplayMessage = ({selfId,pressKey}) => {
     
 
   }, [pressKey]);
+  
+  useEffect(()=>{
+    getGroupMessagesTwoZeroOne().then((res) => {
+      console.log(res);
+      setMsgList(res);
+    }).catch((err) => {
+      console.log("NO GROUP MESSAGE FOUND. ERROR: "+err);
+    });
+  },[counter])
 
   const managedMessage = (userListState,messageListState) =>{
     const newList = messageListState.map(m => {

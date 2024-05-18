@@ -10,9 +10,8 @@ const Setting = () => {
     navigate('/signin');
   }
   return (
-    <div className='flexcol hw100 borr'>
-      Setting
-      <div className='p-5 borx3'>
+    <div className='flexcol hw100 bo'>
+      <div className='p-5 bor'>
         <button className='py-2 px-5 colw borw bgx2' onClick={handelLogOut}>
           Log Out
         </button>

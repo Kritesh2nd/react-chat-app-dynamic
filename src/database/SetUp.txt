@@ -1,0 +1,25 @@
+
+Step 1: 
+Create a folder
+
+Step 2:
+Create a file name "db.json" inside the folder
+
+Step 3:
+Copy the content of "copyThis.txt" file to db.json
+"copyThis.txt" file is present in this same folder
+
+Step 4:
+Open that folder in terminal
+
+Step 5:
+Write following command and keep on hitting enter
+npm init
+
+Step 6:
+Write following command and let is setup a json server
+npm i json-server
+
+Step 7:
+After completion of previous step, write following command
+npx json-server db.json --port=4000 --watch
