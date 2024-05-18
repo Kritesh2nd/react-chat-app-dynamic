@@ -47,9 +47,13 @@ const Auth = () => {
         console.log("login passed")
         navigate('/');
       }
+      else{
+        setErrorMessage('Invalid email or password');
+        setPassword('');
+        navigate('/signin');
+      }
     })
     .catch((err)=>{
-      console.log("nooo err: "+err)
       setErrorMessage('Invalid email or password');
       setPassword('');
       navigate('/signin');
@@ -68,7 +72,8 @@ const Auth = () => {
             "fullname":fullname,
             "username": fullname,
             "email": email,
-            "password": password
+            "password": password,
+            "type": "user",
           }
           addUser(newUser);
           localStorage.setItem('isLogin', '1');
@@ -76,7 +81,7 @@ const Auth = () => {
           navigate('/');
           console.log("register passed")
         }else{
-          setErrorMessage('Account is already created from this account');
+          setErrorMessage('Account is already created from this email');
         }
       })
       .catch((err)=>{

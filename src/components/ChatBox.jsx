@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
-
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
 import iconMessage1 from "../icons/message1.png"
 import addPerson from "../icons/addPerson.png"
@@ -22,10 +23,12 @@ import avatar6 from '../images/avatar6.png'
 import avatar7 from '../images/avatar7.png'
 import avatar8 from '../images/avatar8.png'
 
-import { getAllUsers,getGroupMessagesByName, addUser, searchByEmail } from "../service/user-management.service"
+import { getAllUsers,addGroupMessagesTwoZeroOne, getGroupMessagesTwoZeroOne,timeConverter } from "../service/user-management.service"
 
 
-const InputMsg = ({value,handelMessage}) => {
+const InputMsg = ({value,handelMessage,inputRef,handleKeyPress,handelSendMessage}) => {
+
+ 
   return (
     <div className='flex bor w100'>
       <div className='flex aic'>
@@ -36,15 +39,17 @@ const InputMsg = ({value,handelMessage}) => {
           src="text" 
           className='fs16 py-[10px] p-[16px] br10 w-full' 
           value={value} 
-          onInput={handelMessage} 
+          onChange={handelMessage} 
+          onKeyPress={handleKeyPress}
           placeholder='Type your message here'
+          ref={inputRef}
         />
       </div>
       <div className='flex aic mr-3'>
         <img src={smileEmoji} className='h-6 bor'/>
       </div>
       <div className='flex aic'>
-        <img src={sendMessage} className='h-8 bor' data-name={"send message"}/>
+        <img src={sendMessage} className='h-8 bor' data-name={"send message"} onClick={handelSendMessage}/>
       </div>
     </div>
   )
@@ -87,7 +92,7 @@ const Message = ({selfId,msgData}) => {
   const {id, uid, message, fullname, time } = msgData;
   // const selfMsg = true;
 
-  const selfMsg = selfId == id;
+  const selfMsg = selfId == uid;
   return (
     <div className='flexcol bor'>
       <div className={`${selfMsg?'none':''} pl-16 fs12 txt4 flex aic bor`}>
@@ -110,26 +115,16 @@ const Message = ({selfId,msgData}) => {
     </div>
   )
 }
-const DisplayMessage = () => {
+const DisplayMessage = ({selfId,pressKey}) => {
   const scrollRef = useRef(null);
 
-  const [selfId, setSelfId] = useState("0");
+  // const [selfId, setSelfId] = useState("0");
 
   const [userList, setUserList] = useState([]);
 
   const [msgList, setMsgList] = useState([]);
   const [newMsgList, setNewMsgList] = useState([]);
-  const allMsg = [
-    { id:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
-    { id:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
-    { id:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
-    { id:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
-    { id:"1", profile:avatar1, fullname:'Kritesh Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum, quidem!', time:'7:28 AM' },
-    { id:"2", profile:avatar6, fullname:'Swastika Thapa', message:'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quo libero dolorum!', time:'7:29 AM' },
-    { id:"3", profile:avatar2, fullname:'Kiran Chettri', message:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', time:'7:30 AM' },
-    { id:"4", profile:avatar3, fullname:'Siddhartha Thapa', message:'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti.', time:'7:31 AM' },
-    
-  ]
+
   
   useEffect(()=>{
 
@@ -139,10 +134,9 @@ const DisplayMessage = () => {
     
   },[userList,msgList])
   useEffect(() => {
-    const currUser = JSON.parse(localStorage.getItem('currUser'));
-    setSelfId(currUser?currUser.id:"0")
+    console.log("oress key",pressKey)
     // localStorage.getItem("")
-    const newUserList = getAllUsers().then((res) => {
+    getAllUsers().then((res) => {
       const temp1 = [...res];
       const temp2 = temp1.map(data => {
         const randomAvatarCode = Math.floor((Math.random()  * 8) + 2);
@@ -167,8 +161,16 @@ const DisplayMessage = () => {
       console.log("NO USER FOUND. ERROR: "+err);
     })
 
-    const groupMsgList = getGroupMessagesByName('201').then((res) => {
-      setMsgList(res[0].messages);
+    // getGroupMessagesTwoZeroOne.then((res) => {
+    //   console.log(res);
+    //   // setMsgList(res);
+    // }).catch((err) => {
+    //   console.log("NO GROUP MESSAGE FOUND. ERROR: "+err);
+    // });
+
+    getGroupMessagesTwoZeroOne().then((res) => {
+      console.log(res);
+      setMsgList(res);
     }).catch((err) => {
       console.log("NO GROUP MESSAGE FOUND. ERROR: "+err);
     });
@@ -184,11 +186,11 @@ const DisplayMessage = () => {
     },500)
     
 
-  }, []);
+  }, [pressKey]);
 
   const managedMessage = (userListState,messageListState) =>{
     const newList = messageListState.map(m => {
-      const msgId = m.id;
+      const msgId = m.uid;
       const test = userListState.filter(u => u.id == msgId);
       console.log("m,test",m,test[0]);
       const test2 = {...m,...test[0]}
@@ -198,12 +200,14 @@ const DisplayMessage = () => {
     setNewMsgList(newList);
   }
   
+
+
   return (
     <div className='bor h-full ova'>
       <div className='px-5 pt-10 h100 ova'  ref={scrollRef}>
         {
-          newMsgList.map(data => (
-            <Message key={data.id+data.uid} selfId={selfId} msgData={data}/>
+          newMsgList.map((data,index) => (
+            <Message key={data.id+data.uid+index} selfId={selfId} msgData={data}/>
           ))
         }
         
@@ -223,15 +227,56 @@ const SetIcon = ({icon}) => {
 
 
 const ChatBox = ({userList}) => {
-
+  const navigate = useNavigate();
   const [msg, setMsg] = useState('');
-  // const [message, setMessage] = useState('');
+  const [selfId, setSelfId] = useState("0");
 
+  
+  // const [message, setMessage] = useState('');
+  const inputRef = useRef(null);
   const handelMessage = (e) => {
+    // setMsg(inputRef.current.value)
     setMsg(e.target.value);
+    // console.log("user msg:",msg,"ref:",inputRef.current.value)
+    console.log(msg)
   }
 
- 
+  const [pressKey, setPressKey] = useState(0);
+
+
+  const handleKeyPress = (event) => {
+    if(event.key == 'Enter' && msg != ''){
+      
+      handelSendMessage();
+    }
+
+  }
+  useEffect(()=>{
+    const currUser = JSON.parse(localStorage.getItem('currUser'));
+    setSelfId(currUser?currUser.id:"0")
+  },[])
+  const handelSendMessage = () => {
+    const date = new Date();
+    const showTime = date.getHours() 
+        + ':' + date.getMinutes() 
+        + ":" + date.getSeconds();
+    
+    const data = {
+      id: uuidv4(),
+      uid: selfId,
+      message: msg,
+      time: timeConverter(showTime)
+    }
+    console.table(data);
+    addGroupMessagesTwoZeroOne(data)
+    setMsg("");
+    setPressKey(pressKey+1)
+    console.log("pressKey",pressKey)
+    // navigate("/signin");
+  } 
+  // useEffect(()=>{
+
+  // },[])
   return (
     <div className='flexcol bgcol5 hw100'>
       
@@ -240,11 +285,17 @@ const ChatBox = ({userList}) => {
       </section>
       
       <section className='h74 bor'>
-        <DisplayMessage {...userList}/>
+        <DisplayMessage selfId={selfId} {...userList} pressKey={pressKey}/>
       </section>
 
       <section className='h13 flex p20 bor'>
-        <InputMsg value={msg} handelMessage={handelMessage}/>
+        <InputMsg 
+          value={msg} 
+          inputRef={inputRef} 
+          handelMessage={handelMessage} 
+          handleKeyPress={handleKeyPress}
+          handelSendMessage={handelSendMessage}
+        />
       </section>
     </div>
   )
