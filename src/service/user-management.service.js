@@ -70,6 +70,17 @@ export const addUser = (data) => {
 // }
 
 
+export const updateUser = (userId, data) => {
+  return new Promise((resolve, reject) => {
+    axios.put(`${BASE_URL}/${userId}`, data)
+        .then(() => {
+          resolve(true);
+        }).catch((err) => {
+          reject(err);
+        })
+  });
+}
+
 export const getUserById = (userId) => {
     return new Promise((resolve, reject) => {
       axios.get(`${BASE_URL}/${userId}`)

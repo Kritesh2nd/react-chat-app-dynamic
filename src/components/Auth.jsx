@@ -140,7 +140,7 @@ const Auth = () => {
         key="password"
         handleInputChange={handleInputChange}
         value={password} />
-        <div className='flex pt20 pl20'>
+        <div className='flex pl20 pt20'>
           <Button click={authTypeSignIn?doLogin:doRegister} title={authTypeSignIn?'Sign In':'Sign Up'}/>
         </div>
         
