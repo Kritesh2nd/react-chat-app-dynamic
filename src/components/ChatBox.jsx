@@ -13,7 +13,7 @@ import paperClip from "../icons/paperClip.png"
 import smileEmoji from "../icons/smileEmoji.png"
 import sendMessage from "../icons/sendMessage.png"
 
-import avatar from '../images/avatar1.png'
+import avatar from '../images/avatar.png'
 import avatar1 from '../images/avatar1.png'
 import avatar2 from '../images/avatar2.png'
 import avatar3 from '../images/avatar3.png'
@@ -89,7 +89,7 @@ const ChatHeader = () => {
 }
 
 const Message = ({selfId,msgData}) => {
-  const {id, uid, message, fullname, time } = msgData;
+  const {id, profile, uid, message, fullname, time } = msgData;
   // const selfMsg = true;
 
   const selfMsg = selfId == uid;
@@ -102,7 +102,7 @@ const Message = ({selfId,msgData}) => {
       <div className={`${selfMsg?'fdrr':''} flex mb-4 bor`}>
       <div className='flexcol bor'>
         <div className='flex bor br50 bgcol1 ovh' data-name="profile head">
-          <img src={avatar} className='h-12 w-12'/>
+          <img src={profile} className='h-12 w-12'/>
         </div>
       </div>  
       <div className={`${selfMsg?'bgcol4':'bgsecondary'} flex p-3 br10 aic mx-4 colx1`} data-name="message" style={{width:'50%',maxWidth:'55%'}}>
@@ -128,7 +128,7 @@ const DisplayMessage = ({selfId,pressKey}) => {
   const [counter, setCounter] = useState(0);
   setInterval(()=>{
     setCounter(counter+1);
-  },[4000])
+  },[3000])
   
   
   useEffect(()=>{
@@ -155,7 +155,7 @@ const DisplayMessage = ({selfId,pressKey}) => {
           case 6: userAvatar = avatar6; break;
           case 7: userAvatar = avatar7; break;
           case 8: userAvatar = avatar8; break;
-          default: userAvatar = avatar1;
+          default: userAvatar = avatar;
         }
         return {...data,selectd:false,profile:userAvatar}
       })
@@ -165,13 +165,6 @@ const DisplayMessage = ({selfId,pressKey}) => {
     .catch((err)=>{
       console.log("NO USER FOUND. ERROR: "+err);
     })
-
-    // getGroupMessagesTwoZeroOne.then((res) => {
-    //   console.log(res);
-    //   // setMsgList(res);
-    // }).catch((err) => {
-    //   console.log("NO GROUP MESSAGE FOUND. ERROR: "+err);
-    // });
 
     getGroupMessagesTwoZeroOne().then((res) => {
       console.log(res);
@@ -197,6 +190,11 @@ const DisplayMessage = ({selfId,pressKey}) => {
     getGroupMessagesTwoZeroOne().then((res) => {
       console.log(res);
       setMsgList(res);
+      setTimeout(()=>{
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+      },500)
     }).catch((err) => {
       console.log("NO GROUP MESSAGE FOUND. ERROR: "+err);
     });

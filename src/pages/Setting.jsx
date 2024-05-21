@@ -10,11 +10,17 @@ const Setting = () => {
     navigate('/signin');
   }
   return (
-    <div className='flexcol hw100 bo'>
-      <div className='p-5 bor'>
-        <button className='py-2 px-5 colw borw bgx2' onClick={handelLogOut}>
-          Log Out
-        </button>
+    <div className='flexcol p-10 hw100 bor colx4'>
+      <div className='flexcol h-[300px] w60 bor p-10  bgcol1 br10 borx3'>
+        <div className='fs24 pb10 bor'>
+          Setting
+        </div>
+        <div className='flex jcsb'>
+          <div>Log Out</div>
+          <button className='py-[6px] px-[20px] colw borw bgx2 br3' onClick={handelLogOut}>
+            Log Out
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import avatar from '../images/avatar1.png'
+import avatar from '../images/avatar.png'
 
 import iconMessage1 from "../icons/message1.png"
 import iconPerson1 from "../icons/person1.png"

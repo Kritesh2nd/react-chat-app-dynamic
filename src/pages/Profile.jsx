@@ -115,7 +115,9 @@ const Profile = () => {
   return (
     <div className='flexcol p-10 hw100 bor colx4'>
       <div className='w60 bor p-10  bgcol1 br10 borx3'>
-        
+        <div className='fs24 pb10 bor'>
+          Profile
+        </div>
         <TextInputUpdate 
           title="Full name" 
           type="text"
