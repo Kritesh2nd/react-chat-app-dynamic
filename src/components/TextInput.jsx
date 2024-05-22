@@ -3,13 +3,13 @@ import React from 'react'
 const TextInput = (props) => {
   return (
     <div className='flexcol px-5 pb10 bor'>
-      <label className='fs18 pb5 txt4'>
+      <label className='fs18 pb5 colw'>
         {props.title}
       </label>
       <div>
         <input 
           type={props.type}
-          className='fs18 py-1 px-2 br5 w100 transparent borcol5 txt5' 
+          className='fs18 py-1 px-2 br5 w100 transparent borcol5 colw' 
           onChange={props.handleInputChange}
           name={props.name}
           value={props.value} 

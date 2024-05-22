@@ -109,11 +109,11 @@ const Auth = () => {
     setErrorMessage('')
   }
   return (
-    <div className='flexcol hw100 p20 ptn30 br10 bgcol2'>
+    <div className='flexcol hw100 p20 ptn30 br10 bgcol3'>
       <div className='flexmid tac fs24 font-semibold '>
-        <span className={`${authTypeSignIn?'':'txt4 fs18 font-medium'} cup`} onClick={()=>{handelSignInUp(true)}}>Sign In </span>
-        <span className='font-medium'>&nbsp;|&nbsp;</span>
-        <span className={`${authTypeSignIn?'txt4 fs18 font-medium':''} cup`} onClick={()=>{handelSignInUp(false)}}>Sign Up</span>
+        <span className={`${authTypeSignIn?'colw':'txt4 colw fs18 font-medium'} cup`} onClick={()=>{handelSignInUp(true)}}>Sign In </span>
+        <span className='font-medium colx3'>&nbsp;|&nbsp;</span>
+        <span className={`${authTypeSignIn?'txt4 fs18 font-medium':'colw'} cup`} onClick={()=>{handelSignInUp(false)}}>Sign Up</span>
       </div>
       <div className='pt20'>
       
@@ -141,7 +141,13 @@ const Auth = () => {
         handleInputChange={handleInputChange}
         value={password} />
         <div className='flex pl20 pt20'>
-          <Button click={authTypeSignIn?doLogin:doRegister} title={authTypeSignIn?'Sign In':'Sign Up'}/>
+          <div 
+            className="py-1 px-8 fs20 br7 bor bgcol4 txt5 cup"
+            onClick={authTypeSignIn?doLogin:doRegister}
+          >
+            {authTypeSignIn?'Sign In':'Sign Up'}
+          </div>
+          {/* <Button click={authTypeSignIn?doLogin:doRegister} title={authTypeSignIn?'Sign In':'Sign Up'}/> */}
         </div>
         
         <div className='fs15 pt5 txt6 pl20'>

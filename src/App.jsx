@@ -7,12 +7,13 @@ import Layout from './pages/Layout'
 import PageMessage from './pages/PageMessage'
 import Setting from './pages/Setting'
 import Profile from './pages/Profile'
+import BgTest from './pages/BgTest'
 
 const App = () => {
   // const [currUser, setCurrUser] = useState({});
   return (
     <div className='app'>
-      {/* <Landing/> */}
+      {/* <BgTest/> */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout/>} >
